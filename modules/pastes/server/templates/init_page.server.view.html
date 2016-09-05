@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Create New Paste</title>
+  <style type="text/css" media="screen">
+    #editor {
+      min-height:300px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container">
+
+  <div class="row">
+    <h3>Paste Box..!! {{name}}</h3>
+  </div>
+
+  <div class="row">
+    <div id="editor" class="col-lg-6">{{code}}
+    </div>
+  </div>
+    <div class="row">
+      <button class="btn btn-default" type="submit" onclick="createPaste()">Button</button>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="/lib/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+
+
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+
+
+    function createPaste() {
+      var request = $.ajax({
+        url: "/api/paste",
+        type: "POST",
+        data: {code : editor.getValue()},
+        dataType: "json"
+      });
+
+      request.done(function(res) {
+        window.location = window.location.origin + '/api/paste/' + res[0].Url;
+      });
+
+      request.fail(function(jqXHR, textStatus) {
+        alert( "Request failed: " + textStatus );
+      });
+    }
+      
+  </script>
+
+  </div>
+</body>
+</html>
